@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Eadent.Common/Eadent.Common.csproj" />
+  <Project Path="Eadent.Identity/Eadent.Identity.csproj" />
+  <Project Path="RaptureTherapy.Common/RaptureTherapy.Common.csproj" />
+  <Project Path="RaptureTherapyAdmin/RaptureTherapyAdmin.csproj" />
+</Solution>

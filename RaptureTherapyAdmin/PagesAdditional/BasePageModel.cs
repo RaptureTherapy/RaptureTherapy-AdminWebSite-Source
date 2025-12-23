@@ -1,0 +1,82 @@
+﻿using RaptureTherapy.Common.Configuration;
+using RaptureTherapyAdmin.Sessions;
+using Eadent.Common.WebApi.ApiClient;
+using Eadent.Common.WebApi.DataTransferObjects.Google;
+using Eadent.Common.WebApi.Helpers;
+using Eadent.Identity.Access;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace RaptureTherapyAdmin.PagesAdditional
+{
+    public class BasePageModel : PageModel
+    {
+        private ILogger Logger { get; }
+
+        protected IEadentUserIdentity EadentUserIdentity { get; }
+
+        public IUserSession UserSession { get; }
+
+        public string GoogleReCaptchaSiteKey => RaptureTherapyCommonSettings.Instance.GoogleReCaptcha.SiteKey;
+
+        public decimal GoogleReCaptchaScore { get; set; }
+
+        [BindProperty]
+        public string GoogleReCaptchaValue { get; set; }
+
+        protected BasePageModel(ILogger logger, IConfiguration configuration, IUserSession userSession, IEadentUserIdentity eadentUserIdentity)
+        {
+            Logger = logger;
+
+            UserSession = userSession;
+
+            EadentUserIdentity = eadentUserIdentity;
+        }
+
+        protected IActionResult EnsureUserIsSignedIn()
+        {
+            IActionResult actionResult = null;
+
+            if (!UserSession.IsSignedIn)
+            {
+                var returnUrl = Url.Page(PageContext.ActionDescriptor.ViewEnginePath) + Request.QueryString;
+
+                Logger.LogInformation("Redirecting to SignIn page at {DateTimeUtc}. Return Url: {ReturnUrl}", DateTime.UtcNow, returnUrl);
+
+                actionResult = RedirectToPage("/SignIn", new { returnUrl });
+            }
+
+            return actionResult;
+        }
+
+        protected async Task<(bool success, decimal googleReCaptchaScore)> GoogleReCaptchaAsync()
+        {
+            var verifyRequestDto = new ReCaptchaVerifyRequestDto()
+            {
+                secret = RaptureTherapyCommonSettings.Instance.GoogleReCaptcha.Secret,
+                response = GoogleReCaptchaValue,
+                remoteip = HttpHelper.GetLocalIpAddress(Request)
+            };
+
+            bool success = false;
+
+            decimal googleReCaptchaScore = -1M;
+
+            IApiClientResponse<ReCaptchaVerifyResponseDto> response = null;
+
+            using (var apiClient = new ApiClientUrlEncoded(Logger, "https://www.google.com/"))
+            {
+                response = await apiClient.PostAsync<ReCaptchaVerifyRequestDto, ReCaptchaVerifyResponseDto>("/recaptcha/api/siteverify", verifyRequestDto, null);
+            }
+
+            if (response.ResponseDto != null)
+            {
+                googleReCaptchaScore = response.ResponseDto.score;
+
+                success = true;
+            }
+
+            return (success, googleReCaptchaScore);
+        }
+    }
+}

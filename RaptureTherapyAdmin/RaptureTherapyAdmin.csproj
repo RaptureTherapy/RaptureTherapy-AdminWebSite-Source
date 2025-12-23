@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Eadent.Common\Eadent.Common.csproj" />
+    <ProjectReference Include="..\Eadent.Identity\Eadent.Identity.csproj" />
+    <ProjectReference Include="..\RaptureTherapy.Common\RaptureTherapy.Common.csproj" />
+  </ItemGroup>
+
+</Project>

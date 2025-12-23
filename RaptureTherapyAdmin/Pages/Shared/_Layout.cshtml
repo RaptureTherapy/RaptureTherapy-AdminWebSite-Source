@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Rapture Therpay Administration</title>
+
+    @RenderSection("MetaTags", required: false)
+        
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <link rel="stylesheet" href="Branding/V1.0.0.0/RaptureTherapyAdmin.css" asp-append-version="true" />
+</head>
+@{
+    bool isDebug = false;
+
+#if DEBUG
+    isDebug = true;
+#endif
+}
+<body>
+    <header class="headerRapture">
+        <nav>
+            <a href="/"><img src="/Images/Simba - 8 Percent.jpg" alt="TherapyRapture.com" title="TherapyRapture.com" style="height: 100px;" /></a>
+            <h1 style="margin: 25px; color: orange;">Rapture Therapy.</h1>
+
+            <br />
+            <hr />
+            &nbsp;
+            <a href="/Index">Home</a>
+            &nbsp;
+            <a href="/References">References</a>
+            &nbsp;
+            <a href="/About">About</a>
+            &nbsp;
+            @if (isDebug)
+            {
+                <text>
+                    <a href="/AddData">Add Data</a>
+                    &nbsp;
+                </text>
+            }
+            <hr />
+
+            <div>
+                You Are Signed In: @if (Model.UserSession.IsSignedIn)
+                {
+                    <text>Yes</text>
+                    <br />
+                    <div>User Display Name: @Model.UserSession.DisplayName</div>
+                    <br />
+                    <div>User Roles Ids: @Model.UserSession.GetRoleIdsAsString()</div>
+                    <div>User Roles Names: @Model.UserSession.GetRoleNamesAsString()</div>
+
+                    <a href="/SignOut">Sign Out</a>
+                }
+                else
+                {
+                    <text>No</text>
+                }
+            </div>
+        </nav>
+    </header>
+
+    <main id="mainRaptureTherapy">
+        <br />
+
+        <div id="divDateAndTime">
+            <script type="text/javascript">
+                var browserNow = new Date();
+                document.write("[Browser] " + browserNow.toDateString() + " - " + browserNow.toTimeString());
+            </script>
+        </div>
+
+        @RenderBody()
+    </main>
+
+    <footer id="footerRaptureTherapy">
+        <hr />
+
+        &nbsp;
+
+        Copyright &copy; 2021<script type="text/javascript" language="javascript">
+            if (browserNow.getFullYear() > 2021)
+                document.write("-" + browserNow.getFullYear());
+        </script>
+        Rapture Therapy. All Rights Reserved.
+    </footer>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

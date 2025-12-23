@@ -1,0 +1,9 @@
+[submodule "Eadent.Common"]
+	path = Eadent.Common
+	url = git@github.com:Eadent/Eadent-Common-Module-Source.git
+[submodule "RaptureTherapy.Common"]
+	path = RaptureTherapy.Common
+	url = git@github.com:RaptureTherapy/RaptureTherapy-Common-Module-Source.git
+[submodule "Eadent.Identity"]
+	path = Eadent.Identity
+	url = git@github.com:Eadent/Eadent-Identity-Module-Source.git
